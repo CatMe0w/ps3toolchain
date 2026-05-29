@@ -2,7 +2,7 @@
 # gcc-newlib-SPU.sh by Naomi Peori (naomi@peori.ca)
 
 GCC="gcc-7.5.0"
-NEWLIB="4.2.0.20211231"
+NEWLIB="newlib-4.2.0.20211231"
 
 if [ ! -d ${GCC} ]; then
 
