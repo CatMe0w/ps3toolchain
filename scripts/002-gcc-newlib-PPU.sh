@@ -64,5 +64,5 @@ cd ${GCC}/build-ppu
 
 ## Compile and install.
 PROCS="$(nproc --all 2>&1)" || ret=$?
-if [ ! -z $ret ]; then PROCS=4; fi
+if [ ! -z $ret ]; then PROCS="$(sysctl -n hw.ncpu 2>/dev/null)"; fi
 ${MAKE:-make} -j $PROCS all && ${MAKE:-make} install

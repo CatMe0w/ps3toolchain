@@ -42,9 +42,11 @@ cd ${BINUTILS}/build-spu
     --disable-werror \
     --with-gcc \
     --with-gnu-as \
-    --with-gnu-ld
+    --with-gnu-ld \
+    --with-system-zlib \
+    --with-pic
 
 ## Compile and install.
 PROCS="$(nproc --all 2>&1)" || ret=$?
-if [ ! -z $ret ]; then PROCS=4; fi
-${MAKE:-make} -j $PROCS && ${MAKE:-make} libdir=host-libs/lib install
+if [ ! -z $ret ]; then PROCS="$(sysctl -n hw.ncpu 2>/dev/null)"; fi
+${MAKE:-make} -j $PROCS && ${MAKE:-make} libdir=$(pwd)/host-libs/lib install
