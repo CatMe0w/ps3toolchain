@@ -2,7 +2,7 @@
 # psl1ght.sh by Naomi Peori (naomi@peori.ca)
 
 ## Download the source code.
-wget --no-check-certificate https://github.com/ps3dev/PSL1GHT/tarball/aqua-updates -O psl1ght.tar.gz
+wget -q --show-progress --no-check-certificate https://github.com/ps3dev/PSL1GHT/tarball/aqua-updates -O psl1ght.tar.gz
 
 ## Unpack the source code.
 rm -Rf psl1ght && mkdir psl1ght && tar --strip-components=1 --directory=psl1ght -xzf psl1ght.tar.gz

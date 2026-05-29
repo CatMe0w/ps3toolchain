@@ -4,19 +4,29 @@
 GCC="gcc-7.5.0"
 NEWLIB="newlib-4.4.0.20231231"
 
-if [ ! -d ${GCC} ]; then
+if [ ! -d ${NEWLIB} ]; then
 
   ## Download the source code.
-  if [ ! -f ${GCC}.tar.xz ]; then wget --continue https://ftpmirror.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.xz; fi
-  if [ ! -f ${NEWLIB}.tar.gz ]; then wget --continue https://sourceware.org/pub/newlib/${NEWLIB}.tar.gz; fi
+  if [ ! -f ${NEWLIB}.tar.gz ]; then wget -q --show-progress --continue https://sourceware.org/pub/newlib/${NEWLIB}.tar.gz; fi
 
   ## Unpack the source code.
-  rm -Rf ${GCC} && tar xfJ ${GCC}.tar.xz
   rm -Rf ${NEWLIB} && tar xfz ${NEWLIB}.tar.gz
 
   ## Patch the source code.
-  cat ../patches/${GCC}-PS3.patch | patch -p1 -d ${GCC}
   cat ../patches/${NEWLIB}-PS3.patch | patch -p1 -d ${NEWLIB}
+
+fi
+
+if [ ! -d ${GCC} ]; then
+
+  ## Download the source code.
+  if [ ! -f ${GCC}.tar.xz ]; then wget -q --show-progress --continue https://ftpmirror.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.xz; fi
+
+  ## Unpack the source code.
+  rm -Rf ${GCC} && tar xfJ ${GCC}.tar.xz
+
+  ## Patch the source code.
+  cat ../patches/${GCC}-PS3.patch | patch -p1 -d ${GCC}
 
   ## Enter the source code directory.
   cd ${GCC}
