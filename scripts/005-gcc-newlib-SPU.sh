@@ -4,38 +4,29 @@
 GCC="gcc-7.5.0"
 NEWLIB="newlib-4.2.0.20211231"
 
-if [ ! -d ${NEWLIB} ]; then
-
-  ## Download the source code.
-  if [ ! -f ${NEWLIB}.tar.gz ]; then wget -q --show-progress --continue https://sourceware.org/pub/newlib/${NEWLIB}.tar.gz; fi
-
-  ## Unpack the source code.
-  rm -Rf ${NEWLIB} && tar xfz ${NEWLIB}.tar.gz
-
-  ## Patch the source code.
-  cat ../patches/${NEWLIB}-PS3.patch | patch -p1 -d ${NEWLIB}
-
-fi
-
-if [ ! -d ${GCC} ]; then
+if [ ! -d ${GCC}-SPU ]; then
 
   ## Download the source code.
   if [ ! -f ${GCC}.tar.xz ]; then wget -q --show-progress --continue https://ftpmirror.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.xz; fi
+  if [ ! -f ${NEWLIB}.tar.gz ]; then wget -q --show-progress --continue https://sourceware.org/pub/newlib/${NEWLIB}.tar.gz; fi
 
   ## Unpack the source code.
-  rm -Rf ${GCC} && tar xfJ ${GCC}.tar.xz
+  tar xfJ ${GCC}.tar.xz
+  mv ${GCC} ${GCC}-SPU
+
+  tar xfz ${NEWLIB}.tar.gz
+  mv ${NEWLIB} ${NEWLIB}-SPU
 
   ## Patch the source code.
-  cat ../patches/${GCC}-PS3.patch | patch -p1 -d ${GCC}
+  cat ../patches/${NEWLIB}-PS3.patch | patch -p1 -d ${NEWLIB}-SPU
+  cat ../patches/${GCC}-PS3.patch | patch -p1 -d ${GCC}-SPU
 
   ## Enter the source code directory.
-  cd ${GCC}
+  cd ${GCC}-SPU
 
   ## Create the newlib symlinks.
-  if [ -f ../${NEWLIB}/newlib ]; then rm newlib; fi
-  if [ -f ../${NEWLIB}/libgloss ]; then rm libgloss; fi
-  ln -s ../${NEWLIB}/newlib newlib
-  ln -s ../${NEWLIB}/libgloss libgloss
+  ln -s ../${NEWLIB}-SPU/newlib newlib
+  ln -s ../${NEWLIB}-SPU/libgloss libgloss
 
   ## Download the prerequisites.
   ./contrib/download_prerequisites
@@ -45,15 +36,15 @@ if [ ! -d ${GCC} ]; then
 
 fi
 
-if [ ! -d ${GCC}/build-spu ]; then
+if [ ! -d ${GCC}-SPU/build-spu ]; then
 
   ## Create the build directory.
-  mkdir ${GCC}/build-spu
+  mkdir ${GCC}-SPU/build-spu
 
 fi
 
 ## Enter the build directory.
-cd ${GCC}/build-spu
+cd ${GCC}-SPU/build-spu
 
 ## Configure the build.
 CFLAGS_FOR_TARGET="-Os -fpic -ffast-math -ftree-vectorize -funroll-loops -fschedule-insns -mdual-nops -mwarn-reloc" \
@@ -71,6 +62,7 @@ CFLAGS_FOR_TARGET="-Os -fpic -ffast-math -ftree-vectorize -funroll-loops -fsched
     --with-newlib \
     --enable-newlib-multithread \
     --enable-newlib-hw-fp \
+    --with-system-zlib \
     --with-pic
 
 ## Compile and install.

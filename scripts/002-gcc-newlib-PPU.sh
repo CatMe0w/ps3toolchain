@@ -4,38 +4,29 @@
 GCC="gcc-7.5.0"
 NEWLIB="newlib-4.4.0.20231231"
 
-if [ ! -d ${NEWLIB} ]; then
-
-  ## Download the source code.
-  if [ ! -f ${NEWLIB}.tar.gz ]; then wget -q --show-progress --continue https://sourceware.org/pub/newlib/${NEWLIB}.tar.gz; fi
-
-  ## Unpack the source code.
-  rm -Rf ${NEWLIB} && tar xfz ${NEWLIB}.tar.gz
-
-  ## Patch the source code.
-  cat ../patches/${NEWLIB}-PS3.patch | patch -p1 -d ${NEWLIB}
-
-fi
-
-if [ ! -d ${GCC} ]; then
+if [ ! -d ${GCC}-PPU ]; then
 
   ## Download the source code.
   if [ ! -f ${GCC}.tar.xz ]; then wget -q --show-progress --continue https://ftpmirror.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.xz; fi
+  if [ ! -f ${NEWLIB}.tar.gz ]; then wget -q --show-progress --continue https://sourceware.org/pub/newlib/${NEWLIB}.tar.gz; fi
 
   ## Unpack the source code.
-  rm -Rf ${GCC} && tar xfJ ${GCC}.tar.xz
+  tar xfJ ${GCC}.tar.xz
+  mv ${GCC} ${GCC}-PPU
+
+  tar xfz ${NEWLIB}.tar.gz
+  mv ${NEWLIB} ${NEWLIB}-PPU
 
   ## Patch the source code.
-  cat ../patches/${GCC}-PS3.patch | patch -p1 -d ${GCC}
+  cat ../patches/${NEWLIB}-PS3.patch | patch -p1 -d ${NEWLIB}-PPU
+  cat ../patches/${GCC}-PS3.patch | patch -p1 -d ${GCC}-PPU
 
   ## Enter the source code directory.
-  cd ${GCC}
+  cd ${GCC}-PPU
 
   ## Create the newlib symlinks.
-  if [ -f ../${NEWLIB}/newlib ]; then rm newlib; fi
-  if [ -f ../${NEWLIB}/libgloss ]; then rm libgloss; fi
-  ln -s ../${NEWLIB}/newlib newlib
-  ln -s ../${NEWLIB}/libgloss libgloss
+  ln -s ../${NEWLIB}-PPU/newlib newlib
+  ln -s ../${NEWLIB}-PPU/libgloss libgloss
 
   ## Download the prerequisites.
   ./contrib/download_prerequisites
@@ -45,15 +36,15 @@ if [ ! -d ${GCC} ]; then
 
 fi
 
-if [ ! -d ${GCC}/build-ppu ]; then
+if [ ! -d ${GCC}-PPU/build-ppu ]; then
 
   ## Create the build directory.
-  mkdir ${GCC}/build-ppu
+  mkdir ${GCC}-PPU/build-ppu
 
 fi
 
 ## Enter the build directory.
-cd ${GCC}/build-ppu
+cd ${GCC}-PPU/build-ppu
 
 ## Configure the build.
 ../configure --prefix="$PS3DEV/ppu" --target="powerpc64-ps3-elf" \
