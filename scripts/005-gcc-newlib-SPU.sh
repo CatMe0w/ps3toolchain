@@ -32,6 +32,8 @@ if [ ! -d ${GCC} ]; then
   cd ${GCC}
 
   ## Create the newlib symlinks.
+  if [ -f ../${NEWLIB}/newlib ]; then rm newlib; fi
+  if [ -f ../${NEWLIB}/libgloss ]; then rm libgloss; fi
   ln -s ../${NEWLIB}/newlib newlib
   ln -s ../${NEWLIB}/libgloss libgloss
 
