@@ -5,7 +5,7 @@
 ( python --version || python -V ) 1>/dev/null 2>&1 || { echo "ERROR: Install python before continuing."; exit 1; }
 
 ## Check for python-config
-pyprefix=$(python-config --prefix)
+pyprefix=$(python-config --prefix || python3-config --prefix)
 [ $? -eq 0 ] || { echo "ERROR: Install python-dev before continuing."; exit 1; }
 
 ## Check for python header files
