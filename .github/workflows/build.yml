@@ -24,11 +24,25 @@ jobs:
     
     - name: Install macOS requirements
       if: matrix.os == 'macos-latest'
+      shell: arch -x86_64 bash -e {0}
       run: |
-        brew update
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         brew install autoconf automake openssl libelf ncurses zlib gmp wget pkg-config texinfo
 
     - name: Runs all the stages in the shell
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        mkdir $PWD/ps3dev
+        export PS3DEV=$PWD/ps3dev
+        export PSL1GHT=$PS3DEV
+        export PATH=$PATH:$PS3DEV/bin
+        export PATH=$PATH:$PS3DEV/ppu/bin
+        export PATH=$PATH:$PS3DEV/spu/bin
+        ./toolchain.sh
+
+    - name: Runs all the stages in the shell
+      if: matrix.os == 'macos-latest'
+      shell: arch -x86_64 bash -e {0}
       run: |
         mkdir $PWD/ps3dev
         export PS3DEV=$PWD/ps3dev
