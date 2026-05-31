@@ -45,6 +45,8 @@ cd ${GCC}/build-spu
 
 ## Configure the build.
 CFLAGS_FOR_TARGET="-Os -fpic -ffast-math -ftree-vectorize -funroll-loops -fschedule-insns -mdual-nops -mwarn-reloc" \
+CFLAGS="-Wno-int-conversion" \
+CXXFLAGS="-Wno-int-conversion" \
 ../configure --prefix="$PS3DEV/spu" --target="spu" \
     --disable-dependency-tracking \
     --disable-libcc1 \
