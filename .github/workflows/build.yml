@@ -27,6 +27,9 @@ jobs:
       shell: arch -x86_64 bash -e {0}
       run: |
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        echo >> /Users/runner/.bash_profile
+        echo 'eval "$(/usr/local/bin/brew shellenv bash)"' >> /Users/runner/.bash_profile
+        eval "$(/usr/local/bin/brew shellenv bash)"
         brew install autoconf automake openssl libelf ncurses zlib gmp wget pkg-config texinfo
 
     - name: Runs all the stages in the shell
