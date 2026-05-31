@@ -66,4 +66,5 @@ CXXFLAGS="-Wno-int-conversion" \
 ## Compile and install.
 PROCS="$(nproc --all 2>&1)" || ret=$?
 if [ ! -z $ret ]; then PROCS=4; fi
-${MAKE:-make} -j $PROCS all && ${MAKE:-make} install
+${MAKE:-make} -j $PROCS all
+${MAKE:-make} MULTIOSDIR=. install
