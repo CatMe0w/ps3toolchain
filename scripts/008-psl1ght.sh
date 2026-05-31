@@ -11,4 +11,13 @@ rm -Rf psl1ght && mkdir psl1ght && tar --strip-components=1 --directory=psl1ght 
 cd psl1ght
 
 ## Compile and install.
+
+# on macOS host tools must not see PS3 headers before Darwin SDK headers
+# else apple's stdio.h can break includes
+if [ "$(uname -s)" = "Darwin" ]; then
+  unset CPATH
+  unset C_INCLUDE_PATH
+  unset CPLUS_INCLUDE_PATH
+  unset OBJC_INCLUDE_PATH
+fi
 ${MAKE:-make} install-ctrl && ${MAKE:-make} && ${MAKE:-make} install
