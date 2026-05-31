@@ -44,7 +44,7 @@ fi
 cd ${GCC}/build-ppu
 
 ## Configure the build.
-../configure --prefix="$PS3DEV/ppu" --target="powerpc64-ps3-elf" \
+CFLAGS="-Wno-int-conversion" CXXFLAGS="-Wno-int-conversion" ../configure --prefix="$PS3DEV/ppu" --target="powerpc64-ps3-elf" \
     --disable-dependency-tracking \
     --disable-libcc1 \
     --disable-libstdcxx-pch \
