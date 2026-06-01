@@ -1,4 +1,5 @@
 [![License](https://img.shields.io/github/license/ps3dev/ps3toolchain.svg)](./LICENSE)
+[![CI](https://github.com/ps3dev/ps3toolchain/actions/workflows/build.yml/badge.svg)](https://github.com/ps3dev/ps3toolchain/actions/workflows/build.yml)
 
   What does this do?
  ====================
