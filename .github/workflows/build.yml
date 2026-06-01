@@ -11,7 +11,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest]
+        os: [ubuntu-latest]
 
     steps:
     - uses: actions/checkout@v6
@@ -21,31 +21,8 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get -y install autoconf automake bison flex gcc libelf-dev make texinfo libncurses5-dev patch python3 python-is-python3 subversion wget zlib1g-dev libtool-bin python3-dev bzip2 libgmp3-dev pkg-config
-    
-    - name: Install macOS requirements
-      if: matrix.os == 'macos-latest'
-      shell: arch -x86_64 bash -e {0}
-      run: |
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        echo >> /Users/runner/.bash_profile
-        echo 'eval "$(/usr/local/bin/brew shellenv bash)"' >> /Users/runner/.bash_profile
-        eval "$(/usr/local/bin/brew shellenv bash)"
-        brew install autoconf automake openssl libelf ncurses zlib gmp wget pkg-config texinfo
 
     - name: Runs all the stages in the shell
-      if: matrix.os == 'ubuntu-latest'
-      run: |
-        mkdir $PWD/ps3dev
-        export PS3DEV=$PWD/ps3dev
-        export PSL1GHT=$PS3DEV
-        export PATH=$PATH:$PS3DEV/bin
-        export PATH=$PATH:$PS3DEV/ppu/bin
-        export PATH=$PATH:$PS3DEV/spu/bin
-        ./toolchain.sh
-
-    - name: Runs all the stages in the shell
-      if: matrix.os == 'macos-latest'
-      shell: arch -x86_64 bash -e {0}
       run: |
         mkdir $PWD/ps3dev
         export PS3DEV=$PWD/ps3dev
